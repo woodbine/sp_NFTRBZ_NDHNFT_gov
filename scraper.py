@@ -38,12 +38,13 @@ def validateFilename(filename):
 
 def validateURL(url):
     try:
-        r = requests.get(url, allow_redirects=True, timeout=20)
+        ua = {'User-Agent': 'Mozilla/5.0'}
+        r = requests.get(url, allow_redirects=True, timeout=20, headers=ua)
         count = 1
         while r.status_code == 500 and count < 4:
             print ("Attempt {0} - Status code: {1}. Retrying.".format(count, r.status_code))
             count += 1
-            r = requests.get(url, allow_redirects=True, timeout=20)
+            r = requests.get(url, allow_redirects=True, timeout=20, headers=ua)
         sourceFilename = r.headers.get('Content-Disposition')
         if sourceFilename:
             ext = os.path.splitext(sourceFilename)[1].replace('"', '').replace(';', '').replace(' ', '')
@@ -84,13 +85,15 @@ def convert_mth_strings ( mth_string ):
 #### VARIABLES 1.0
 
 entity_id = "NFTRBZ_NDHNFT_gov"
-url = "http://www.northdevonhealth.nhs.uk/about/reports/expenditure-information"
+url = "http://www.northdevonhealth.nhs.uk/about/reports/expenditure-information/"
 errors = 0
 data = []
 
 #### READ HTML 1.0
 
-html = urllib2.urlopen(url)
+opener = urllib2.build_opener()
+opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+html = opener.open(url)
 soup = BeautifulSoup(html, 'lxml')
 
 
