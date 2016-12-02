@@ -102,7 +102,7 @@ soup = BeautifulSoup(html, 'lxml')
 blocks = soup.find('p', text=re.compile('HM Treasury Guidance')).find_all_next('a')
 for block in blocks:
     if '.csv' in block['href']:
-        url = block['href'].replace('\xa3', '')
+        url = block['href']
         title = block.text.strip()
         csvMth = title[:3]
         csvYr = title[-4:]
